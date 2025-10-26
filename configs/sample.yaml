@@ -1,9 +1,0 @@
-gold: data/gold.jsonl
-pred: data/pred.jsonl
-db_root: databases/
-out: outputs/report.json
-workers: 8
-weights:
-  execution: 0.5
-  component: 0.4
-  exact: 0.1

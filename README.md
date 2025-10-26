@@ -63,7 +63,7 @@ Download links:
 
 Place gold/pred files accordingly and provide `--db_root` pointing to per-DB folders with `DB.sqlite` for Spider/Spider2/BIRD/SParC/CoSQL.
 
-## Build FusionDataset
+## FusionDataset
 
 Construct a synthetic, diverse dataset from CSV sources:
 
@@ -80,7 +80,7 @@ This will:
 - generate SQLs and paraphrased questions with distractors,
 - write `outputs/fusion_dataset/fusion_dataset.jsonl`.
 
-## Embeddings and Regressor
+## FusionSQL
 
 We embed SQLs (or questions) with a Hugging Face model, compute shift descriptors between a training workload and FusionDataset, and fit an MLP to predict execution accuracy.
 
