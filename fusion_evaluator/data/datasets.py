@@ -49,6 +49,76 @@ def load_bird(gold_path: str, pred_path: str) -> List[Dict[str, Any]]:
 	return align_gold_pred(gold, pred)
 
 
+# SParC / CoSQL loaders (multi-turn). We flatten per-utterance and align by composite id.
+
+def _flatten_dialog_like(items: List[Dict[str, Any]], source: str) -> List[Dict[str, Any]]:
+    """Best-effort flattening for SParC/CoSQL-like structures.
+
+    Produces list of records with fields: id, db_id, question, gold_sql.
+    """
+    out: List[Dict[str, Any]] = []
+    for i, ex in enumerate(items):
+        db_id = ex.get("db_id") or ex.get("database_id") or ex.get("db")
+        root_id = ex.get("id") or ex.get("interaction_id") or str(i)
+        # Common key name for turns
+        turns: List[Dict[str, Any]] = (
+            ex.get("interaction")
+            or ex.get("turns")
+            or ex.get("utterances")
+            or []
+        )
+        if isinstance(turns, list) and turns:
+            for t_idx, turn in enumerate(turns):
+                q = turn.get("utterance") or turn.get("question") or turn.get("text") or ex.get("question")
+                sql = turn.get("query") or turn.get("sql") or ex.get("query") or ex.get("sql")
+                rec_id = f"{root_id}:{t_idx}"
+                out.append({
+                    "id": rec_id,
+                    "db_id": db_id,
+                    "question": q,
+                    "gold_sql": sql,
+                })
+        else:
+            # Fallback single-turn
+            q = ex.get("utterance") or ex.get("question")
+            sql = ex.get("query") or ex.get("sql")
+            rec_id = str(root_id)
+            out.append({
+                "id": rec_id,
+                "db_id": db_id,
+                "question": q,
+                "gold_sql": sql,
+            })
+    return out
+
+
+def load_sparc(gold_path: str, pred_path: str) -> List[Dict[str, Any]]:
+    gold_raw = _read_json_or_jsonl(gold_path)
+    pred_raw = _read_json_or_jsonl(pred_path)
+    gold = _flatten_dialog_like(gold_raw, source="sparc")
+    # Normalize pred to have pred_sql
+    pred: List[Dict[str, Any]] = []
+    for ex in _flatten_dialog_like(pred_raw, source="sparc"):
+        ex = dict(ex)
+        if "pred_sql" not in ex:
+            ex["pred_sql"] = ex.get("prediction") or ex.get("query") or ex.get("sql")
+        pred.append(ex)
+    return align_gold_pred(gold, pred)
+
+
+def load_cosql(gold_path: str, pred_path: str) -> List[Dict[str, Any]]:
+    gold_raw = _read_json_or_jsonl(gold_path)
+    pred_raw = _read_json_or_jsonl(pred_path)
+    gold = _flatten_dialog_like(gold_raw, source="cosql")
+    pred: List[Dict[str, Any]] = []
+    for ex in _flatten_dialog_like(pred_raw, source="cosql"):
+        ex = dict(ex)
+        if "pred_sql" not in ex:
+            ex["pred_sql"] = ex.get("prediction") or ex.get("query") or ex.get("sql")
+        pred.append(ex)
+    return align_gold_pred(gold, pred)
+
+
 # WikiSQL utilities
 
 _AGG_IDX_TO_NAME = {0: "", 1: "MAX", 2: "MIN", 3: "COUNT", 4: "SUM", 5: "AVG"}
