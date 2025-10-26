@@ -19,16 +19,31 @@ def load_embeddings(path: str) -> np.ndarray:
 
 
 def cmd_train(args: argparse.Namespace) -> None:
-	s_src = load_embeddings(args.source_embeddings)
-	t_tgt = load_embeddings(args.target_embeddings)
-	delta = compute_delta(s_src, t_tgt, L=args.slices)[None, :]
-	# y: observed metric (e.g., execution accuracy) for the target workload
-	y = np.array([args.observed_metric], dtype=np.float32)
-	model = EvaluatorModel(EvaluatorModelConfig())
-	model.fit(delta, y)
-	os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
-	model.save(args.out)
-	print(f"Saved evaluator model to {args.out}")
+    # Support multi-workload training via multiple pairs
+    deltas = []
+    ys = []
+    if args.multi is not None:
+        # args.multi is a JSON file: [{"source": path, "target": path, "metric": float}, ...]
+        with open(args.multi, "r", encoding="utf-8") as f:
+            pairs = json.load(f)
+        for item in pairs:
+            s_src = load_embeddings(item["source"])
+            t_tgt = load_embeddings(item["target"])
+            deltas.append(compute_delta(s_src, t_tgt, L=args.slices))
+            ys.append(float(item["metric"]))
+    else:
+        s_src = load_embeddings(args.source_embeddings)
+        t_tgt = load_embeddings(args.target_embeddings)
+        deltas.append(compute_delta(s_src, t_tgt, L=args.slices))
+        ys.append(float(args.observed_metric))
+
+    X = np.stack(deltas, axis=0)
+    y = np.array(ys, dtype=np.float32)
+    model = EvaluatorModel(EvaluatorModelConfig())
+    model.fit(X, y, calibrate=True)
+    os.makedirs(os.path.dirname(args.out) or ".", exist_ok=True)
+    model.save(args.out)
+    print(f"Saved evaluator model to {args.out}")
 
 
 def cmd_infer(args: argparse.Namespace) -> None:
@@ -45,9 +60,10 @@ def main() -> None:
 	sub = parser.add_subparsers(dest="cmd", required=True)
 
 	tr = sub.add_parser("train", help="Train evaluator model on a workload pair")
-	tr.add_argument("--source_embeddings", required=True, help="Path to source embeddings (.npy or JSON)")
-	tr.add_argument("--target_embeddings", required=True, help="Path to target embeddings (.npy or JSON)")
-	tr.add_argument("--observed_metric", type=float, required=True, help="Observed execution accuracy for target workload")
+    tr.add_argument("--source_embeddings", required=False, help="Path to source embeddings (.npy or JSON)")
+    tr.add_argument("--target_embeddings", required=False, help="Path to target embeddings (.npy or JSON)")
+    tr.add_argument("--observed_metric", type=float, required=False, help="Observed execution accuracy for target workload")
+    tr.add_argument("--multi", required=False, help="JSON file of training pairs for multi-workload training")
 	tr.add_argument("--slices", type=int, default=64)
 	tr.add_argument("--out", required=True, help="Path to save trained model (.joblib)")
 	tr.set_defaults(func=cmd_train)

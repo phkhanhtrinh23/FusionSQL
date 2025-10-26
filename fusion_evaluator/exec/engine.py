@@ -4,23 +4,33 @@ import os
 import sqlite3
 import threading
 from typing import Any, Dict, List, Optional, Tuple
+import time
 
 from ..data.loaders import find_sqlite_db
 from ..sql.normalize import normalize_sql
 
 
 class SQLiteExecutor:
-	def __init__(self, db_root: str, cache_dir: str = "outputs/cache") -> None:
-		self.db_root = db_root
-		self.cache_dir = cache_dir
-		self._lock = threading.Lock()
-		self._memory_cache: Dict[str, List[Tuple[Any, ...]]] = {}
-		os.makedirs(self.cache_dir, exist_ok=True)
+    def __init__(self, db_root: str, cache_dir: str = "outputs/cache") -> None:
+        self.db_root = db_root
+        self.cache_dir = cache_dir
+        self._lock = threading.Lock()
+        self._memory_cache: Dict[str, List[Tuple[Any, ...]]] = {}
+        os.makedirs(self.cache_dir, exist_ok=True)
 
-	def _cache_key(self, db_id: str, sql: str) -> str:
-		norm = normalize_sql(sql)
-		key = f"{db_id}::{norm}".encode("utf-8", errors="ignore")
-		return hashlib.sha1(key).hexdigest()
+    def _db_fingerprint(self, db_path: str) -> str:
+        try:
+            stat = os.stat(db_path)
+            payload = f"{stat.st_mtime_ns}:{stat.st_size}".encode("utf-8")
+            return hashlib.sha1(payload).hexdigest()
+        except Exception:
+            return ""
+
+    def _cache_key(self, db_id: str, sql: str, db_path: Optional[str] = None) -> str:
+        norm = normalize_sql(sql)
+        fp = self._db_fingerprint(db_path) if db_path else ""
+        key = f"{db_id}::{fp}::{norm}".encode("utf-8", errors="ignore")
+        return hashlib.sha1(key).hexdigest()
 
 	def _cache_path(self, key: str) -> str:
 		return os.path.join(self.cache_dir, f"{key}.json")
@@ -44,10 +54,13 @@ class SQLiteExecutor:
 		except Exception:
 			pass
 
-	def execute(self, db_id: str, sql: str, timeout: float = 30.0) -> Tuple[List[Tuple[Any, ...]], Optional[str]]:
+    def execute(self, db_id: str, sql: str, timeout: float = 30.0, timeout_ms: int = 5000) -> Tuple[List[Tuple[Any, ...]], Optional[str]]:
 		if not sql or not db_id:
 			return [], None
-		key = self._cache_key(db_id, sql)
+        db_path = find_sqlite_db(self.db_root, db_id)
+        if not db_path:
+            return [], f"database not found for db_id={db_id}"
+        key = self._cache_key(db_id, sql, db_path)
 		with self._lock:
 			if key in self._memory_cache:
 				return self._memory_cache[key], None
@@ -56,13 +69,22 @@ class SQLiteExecutor:
 				self._memory_cache[key] = rows_disk
 				return rows_disk, None
 
-		db_path = find_sqlite_db(self.db_root, db_id)
-		if not db_path:
-			return [], f"database not found for db_id={db_id}"
-
 		try:
-			conn = sqlite3.connect(db_path, timeout=timeout)
+            conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True, timeout=timeout)
 			conn.row_factory = sqlite3.Row
+            # Performance/consistency PRAGMAs
+            conn.execute("PRAGMA foreign_keys=ON;")
+            conn.execute("PRAGMA synchronous=NORMAL;")
+            conn.execute("PRAGMA temp_store=MEMORY;")
+
+            # Progress handler-based timeout in milliseconds
+            start_ns = time.perf_counter_ns()
+            budget_ns = max(1, timeout_ms) * 1_000_000
+            def _progress() -> int:
+                if (time.perf_counter_ns() - start_ns) > budget_ns:
+                    return 1  # abort
+                return 0
+            conn.set_progress_handler(_progress, 1000)
 			cur = conn.cursor()
 			cur.execute(sql)
 			rows = cur.fetchall()
