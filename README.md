@@ -25,7 +25,6 @@ All metrics and reports here are execution-accuracy by design.
 	- `evaluator.py` orchestrator
 	- `cli.py` evaluation entrypoint
 - `figure/` diagrams
-- `configs/` sample configs
 - `outputs/` reports and caches
 
 ## Getting Started
