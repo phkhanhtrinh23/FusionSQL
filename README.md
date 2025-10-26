@@ -1,6 +1,6 @@
 # FusionSQL
 
-> Execution-accuracy-only evaluation, FusionDataset construction, and shift-aware regression for Text-to-SQL.
+> Text2SQL evaluation, FusionDataset construction, and shift-aware regression for Text-to-SQL.
 
 ![FusionSQL Framework](figure/framework.png)
 
@@ -8,12 +8,12 @@
 
 FusionSQL provides:
 
-- A portable evaluator that reports only execution accuracy for Spider, Spider 2.0, BIRD, SParC, CoSQL, and WikiSQL.
+- A portable evaluator that reports execution accuracy for Spider, Spider 2.0, BIRD, SParC, CoSQL, and WikiSQL.
 - A pipeline to construct a synthetic FusionDataset of databases, SQLs, and paraphrased questions.
-- Shift descriptors (Frechet-like, Mahalanobis, Sliced-Wasserstein) between a target workload and FusionDataset.
+- Shift descriptors (Frechet-like, Mahalanobis, Sliced-Wasserstein) between a target workload and the training set.
 - An MLP regressor that learns to predict execution accuracy for a given base model with minimal MAE.
 
-All metrics and reports here are execution-accuracy-only by design.
+All metrics and reports here are execution-accuracy by design.
 
 ## Project layout
 
