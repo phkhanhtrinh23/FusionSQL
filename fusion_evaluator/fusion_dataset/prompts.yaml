@@ -1,0 +1,77 @@
+# Prompt templates for FusionDataset construction
+
+semantic_enrichment:
+  system: |
+    You are an expert data curator. Score the conceptual richness of the table.
+  user: |
+    Consider the following table header and sample rows.
+    Header: {header}
+    Samples:
+    {samples}
+
+    Score the semantic richness on a 0-1 scale (float). Lower for enumerations, IDs, code-only;
+    higher for concept-rich, relational data. Return only a number.
+
+question_generation:
+  system: |
+    You are a Text-to-SQL data synthesis assistant.
+  user: |
+    Given the database context and an SQL query, write {num} paraphrased natural-language questions
+    covering styles: {styles}. Include subtle distractor phrases in some variations.
+
+    Database: {db_id}
+    Table: {table}
+    Columns: {columns}
+    SQL: {sql}
+
+    Output one question per line.
+
+semantic_rewrite:
+  system: |
+    You are an expert at paraphrasing questions and adjusting column order while preserving semantics.
+  user: |
+    Perform semantic rewriting: paraphrase the question and, when applicable, swap or reorder selected columns without changing results.
+    Produce {num} pairs.
+
+    DB: {db_id}
+    Table: {table}
+    Columns: {columns}
+    Original Q: {question}
+    Original A: {sql}
+
+    Output pairs as lines:
+    Q: ...\nA: ...
+
+numeric_condition_transform:
+  system: |
+    You specialize in transforming numeric conditions while keeping logical equivalence.
+  user: |
+    Transform numeric conditions to equivalent ranges or thresholds (e.g., x>3 -> x BETWEEN 4 AND 9; adapt wording accordingly).
+    Ensure the rewritten SQL is equivalent or near-equivalent in intent for typical datasets. Produce {num} pairs.
+
+    DB: {db_id}
+    Table: {table}
+    Columns: {columns}
+    Original Q: {question}
+    Original A: {sql}
+
+    Output pairs as lines:
+    Q: ...\nA: ...
+
+query_logic_adjustment:
+  system: |
+    You adjust query logic (ordering/limits) while preserving the requested extremum semantics.
+  user: |
+    Adjust queries like TOP-k DESC vs BOTTOM-k ASC by flipping order and wording consistently. Pick appropriate column(s) and keep semantics.
+    Produce {num} pairs.
+
+    DB: {db_id}
+    Table: {table}
+    Columns: {columns}
+    Original Q: {question}
+    Original A: {sql}
+
+    Output pairs as lines:
+    Q: ...\nA: ...
+
+

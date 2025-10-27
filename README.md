@@ -74,10 +74,24 @@ python -m fusion_evaluator.fusion_dataset.cli \
 	--max_tables 1000
 ```
 
+Optional LLM-driven question generation and rewrites (provide both to enable):
+
+```bash
+python -m fusion_evaluator.fusion_dataset.cli \
+  --sources /path/to/csv_sources \
+  --out_root outputs/fusion_dataset \
+  --prompts fusion_evaluator/fusion_dataset/prompts.yaml \
+  --hf_model Qwen/Qwen2.5-72B-Instruct \
+  --device cuda --torch_dtype fp16 \
+  --q_per_sql 4 \
+  --enable_rewrites --rw_per_cat 2
+```
+
 This will:
 - acquire CSVs, filter tables (language, structure, near-dup),
 - synthesize relational DBs (SQLite under `outputs/fusion_dataset/databases`),
-- generate SQLs and paraphrased questions with distractors,
+- generate SQLs and paraphrased questions with distractors (LLM-backed if provided),
+- optionally produce rewritten Q/A pairs for semantic rewriting, numeric condition transforms, and query logic adjustments,
 - write `outputs/fusion_dataset/fusion_dataset.jsonl`.
 
 ## FusionSQL
@@ -113,6 +127,8 @@ python -m fusion_evaluator.evaluator_training.cli train \
 	--source_embeddings path/to/source.npy \
 	--target_embeddings path/to/fusion.npy \
 	--observed_metric 0.712 \
+	--slices 34 \
+	--hybrid_swd --pca_k 10 --rand_r 24 --pca_subsample 8192 \
 	--out outputs/regressor.joblib
 ```
 
@@ -128,7 +144,7 @@ python -m fusion_evaluator.evaluator_training.pipeline train \
     --exec_accuracy 0.712 \
     --model_name Qwen/Qwen2.5-72B-Instruct \
     --hybrid_swd --pca_k 10 --rand_r 24 --pca_subsample 8192 \
-    --slices 32 \
+    --slices 34 \
     --out outputs/regressor_spider_qwen.joblib
 ```
 
@@ -143,7 +159,7 @@ python -m fusion_evaluator.evaluator_training.pipeline infer \
     --fusion_jsonl outputs/fusion_dataset/fusion_dataset.jsonl \
     --model_name Qwen/Qwen2.5-72B-Instruct \
     --hybrid_swd --pca_k 10 --rand_r 24 --pca_subsample 8192 \
-    --slices 32 \
+    --slices 34 \
     --model outputs/regressor_spider_qwen.joblib
 ```
 
