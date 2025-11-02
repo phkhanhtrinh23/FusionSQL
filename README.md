@@ -2,7 +2,7 @@
 
 > Text2SQL evaluation, FusionDataset construction, and shift-aware regression for Text-to-SQL.
 
-![FusionSQL Framework](figure/framework.png)
+![Motivation](figure/introduction_pipeline.png)
 
 ## What is it?
 
@@ -14,6 +14,8 @@ FusionSQL provides:
 - An MLP regressor that learns to predict execution accuracy for a given base model with minimal MAE.
 
 All metrics and reports here are execution-accuracy by design.
+
+![FusionSQL Framework](figure/framework.png)
 
 ## Project layout
 
@@ -55,8 +57,8 @@ Torch wheels differ by platform/GPU. If the default install fails or is slow, in
 Download links:
 
 - Spider: [Project page](https://yale-lily.github.io/spider)
-- Spider 2.0: [Project page](https://yale-lily.github.io/spider)
-- BIRD: [Project page](https://bird-benchmark.com)
+- Spider 2.0: [Project page](https://spider2-sql.github.io/)
+- BIRD: [Project page](https://bird-bench.github.io/)
 - SParC: [Project page](https://yale-lily.github.io/sparc)
 - CoSQL: [Project page](https://yale-lily.github.io/cosql)
 - WikiSQL: [GitHub](https://github.com/salesforce/WikiSQL)
@@ -117,8 +119,8 @@ You can pass any compatible encoder from Hugging Face. Common choices include:
 - `Qwen/Qwen2.5-72B-Instruct`
 - `meta-llama/Llama-3.1-70B-Instruct`
 - `deepseek-ai/deepseek-coder-33b-instruct`
-- `xiyan-team/XiYanSQL-14B`
-- `CSCI-LLM/CSC-SQL-7B`
+- `XGenerationLab/XiYanSQL-QwenCoder-14B-2502`
+- `cycloneboy/CscSQL-Grpo-Qwen2.5-Coder-7B-Instruct`
 
 ### 2) Train the regressor (from precomputed embeddings)
 
@@ -221,7 +223,7 @@ python -m fusion_evaluator.cli \
 
 Output:
 - JSON report at `--out` with `summary` and per-sample metrics.
-- Console table: `ExecAcc`, `N`.
+- Console table: `ExecAcc`.
 </details>
 
 ---
