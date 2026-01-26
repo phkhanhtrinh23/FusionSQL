@@ -19,7 +19,7 @@ class SampleMetrics:
 
 @dataclass
 class Summary:
-    execution_accuracy: float
+	execution_accuracy: float
 	num_samples: int
 
 
@@ -28,8 +28,8 @@ def _evaluate_one(executor: SQLiteExecutor, rec: Dict[str, Any]) -> SampleMetric
 	gold_sql = rec.get("gold_sql") or ""
 	pred_sql = rec.get("pred_sql") or ""
 
-    ea = execution_accuracy_metric(executor, db_id, pred_sql, gold_sql)
-    return SampleMetrics(id=rec.get("id"), db_id=db_id, execution_accuracy=ea)
+	ea = execution_accuracy_metric(executor, db_id, pred_sql, gold_sql)
+	return SampleMetrics(id=rec.get("id"), db_id=db_id, execution_accuracy=ea)
 
 
 def evaluate(
@@ -45,8 +45,8 @@ def evaluate(
 	executor = SQLiteExecutor(db_root)
 
 	results: List[SampleMetrics] = []
-    with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
-        futs = [pool.submit(_evaluate_one, executor, rec) for rec in records]
+	with ThreadPoolExecutor(max_workers=max(1, workers)) as pool:
+		futs = [pool.submit(_evaluate_one, executor, rec) for rec in records]
 		for fut in as_completed(futs):
 			results.append(fut.result())
 
@@ -57,10 +57,10 @@ def evaluate(
 		vals = [getattr(r, key) for r in results]
 		return sum(vals) / len(vals) if vals else 0.0
 
-    summary = Summary(
-        execution_accuracy=avg("execution_accuracy"),
-        num_samples=len(results),
-    )
+	summary = Summary(
+		execution_accuracy=avg("execution_accuracy"),
+		num_samples=len(results),
+	)
 
 	report = {
 		"summary": asdict(summary),

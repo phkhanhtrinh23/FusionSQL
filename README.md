@@ -167,6 +167,42 @@ python -m fusion_evaluator.evaluator_training.pipeline infer \
 
 The regressor predicts execution accuracy for the target workload and chosen base model.
 
+### 5) Sampling-based shift + true execution accuracy (small example)
+
+This helper script repeatedly samples target subsets (e.g., 500 examples), computes shift descriptors between the training workload and each subset, then estimates **true execution accuracy** by generating SQL with a model and executing against the databases. It saves the 100 shift vectors and their accuracies, then fits a 3-layer MLP regressor.
+
+**Example (BIRD dev):**
+```bash
+python -m fusion_evaluator.evaluator_training.shift_sampling_train \
+  --db_root fusion_evaluator/data/bird/dev/dev_databases \
+  --source fusion_evaluator/data/spider/sft_spider_train_text2sql.json \
+  --target fusion_evaluator/data/bird/sft_bird_dev_text2sql.json \
+  --target_limit 500 \
+  --num_sets 100 \
+  --seed 0 \
+  --device cuda --batch_size 8 --torch_dtype fp16
+```
+
+**What it does:**
+- Builds prompts from **question + schema** (same format as `shift_from_json.py`).
+- Uses `Qwen/Qwen2.5-3B-Instruct` to generate SQL.
+- Computes execution accuracy by running SQL against SQLite databases under `--db_root`.
+- Samples 100 subsets of size 500 (no replacement per subset).
+- Computes 100 shift vectors and their 100 accuracies.
+- Trains a 3-layer MLP regressor `(256, 128, 64)` on these vectors.
+
+**Outputs:**
+- `outputs/shift_samples/shift_samples.npz` containing:
+  - `deltas`: `(num_sets, 5)` shift vectors
+  - `accuracies`: `(num_sets,)` true execution accuracies
+  - `sample_indices`: `(num_sets, target_limit)` indices into the target set
+- `outputs/shift_samples/shift_mlp.joblib` trained regressor
+
+**Notes:**
+- For Spider, set `--db_root` to `fusion_evaluator/data/spider/database` (or `test_database` if needed).
+- If you want to reuse a different generation model, set `--model`.
+- To embed with a different model than generation, set `--embed_model`.
+
 <details>
 <summary><b>Show additional usage (Spider, Spider2, BIRD, SParC, CoSQL, WikiSQL)</b></summary>
 
@@ -229,4 +265,3 @@ Output:
 ---
 
 If you run into issues or need helper scripts for dataset downloads/materialization, open an issue or reach out.
-
