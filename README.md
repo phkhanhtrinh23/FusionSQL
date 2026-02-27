@@ -1,8 +1,20 @@
+![visitors](https://visitor-badge.laobi.icu/badge?page_id=phkhanhtrinh23.FusionSQL)
+
 # FusionSQL
 
 > Text2SQL evaluation, FusionDataset construction, and shift-aware regression for Text-to-SQL.
 
 ![Motivation](figure/introduction_pipeline.png)
+
+```
+@inproceedings{fusionsql,
+  author       = {Khanh Trinh Pham and Thanh Tam Nguyen and Viet Huynh and Hongzhi Yin and Quoc Viet Hung Nguyen},
+  title        = {An Efficient and Effective Evaluator for Text2SQL Models on Unseen and Unlabeled Data},
+  booktitle    = {ICDE},
+  publisher    = {IEEE},
+  year         = {2026},
+}
+```
 
 ## What is it?
 
@@ -265,3 +277,8 @@ Output:
 ---
 
 If you run into issues or need helper scripts for dataset downloads/materialization, open an issue or reach out.
+
+-----------
+**Backup Statistics**
+
+![Visitors](https://margherita-gustatory-zane.ngrok-free.dev/badge/phkhanhtrinh23%2FFusionSQL.svg?ngrok-skip-browser-warning=true)
