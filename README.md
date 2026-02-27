@@ -6,6 +6,7 @@
 
 ![Motivation](figure/introduction_pipeline.png)
 
+#### Citation
 ```
 @inproceedings{fusionsql,
   author       = {Khanh Trinh Pham and Thanh Tam Nguyen and Viet Huynh and Hongzhi Yin and Quoc Viet Hung Nguyen},
