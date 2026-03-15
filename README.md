@@ -275,6 +275,801 @@ Output:
 - Console table: `ExecAcc`.
 </details>
 
+## Reported Results
+
+`FusionSQL-TL` denotes FusionSQL Transfer Learning. `FusionSQL-ML` denotes FusionSQL Meta-learning.
+
+<summary><b>Table III. MAE (↓) of dataset-level accuracy estimation for source-target transfers</b></summary>
+
+Each cell reports mean ± 95% CI in percentage points. Best is in bold, second-best is underlined.
+
+<table>
+  <thead>
+    <tr>
+      <th>Transfer</th>
+      <th>Method</th>
+      <th>Qwen2.5-72B</th>
+      <th>Llama-3.1-70B</th>
+      <th>DeepSeek-33B</th>
+      <th>XiYanSQL-14B</th>
+      <th>CSC-SQL-7B</th>
+      <th>Avg.</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="9">Spider → BIRD</td>
+      <td>ATC-MC</td>
+      <td>13.9 ± 1.1</td>
+      <td>14.6 ± 1.2</td>
+      <td>15.2 ± 1.2</td>
+      <td>17.4 ± 1.4</td>
+      <td>18.3 ± 1.5</td>
+      <td>15.9 ± 1.3</td>
+    </tr>
+    <tr>
+      <td>ATC-NE</td>
+      <td>15.0 ± 1.2</td>
+      <td>15.7 ± 1.3</td>
+      <td>16.5 ± 1.3</td>
+      <td>18.6 ± 1.5</td>
+      <td>19.8 ± 1.6</td>
+      <td>17.1 ± 1.4</td>
+    </tr>
+    <tr>
+      <td>DoC (τ=0.8)</td>
+      <td>15.5 ± 1.3</td>
+      <td>16.0 ± 1.3</td>
+      <td>17.3 ± 1.4</td>
+      <td>19.2 ± 1.6</td>
+      <td>20.5 ± 1.6</td>
+      <td>17.7 ± 1.4</td>
+    </tr>
+    <tr>
+      <td>DoC (τ=0.9)</td>
+      <td>16.7 ± 1.4</td>
+      <td>17.3 ± 1.4</td>
+      <td>18.6 ± 1.5</td>
+      <td>20.3 ± 1.7</td>
+      <td>21.7 ± 1.7</td>
+      <td>18.9 ± 1.5</td>
+    </tr>
+    <tr>
+      <td>PseAutoEval</td>
+      <td>11.6 ± 0.9</td>
+      <td>12.2 ± 1.0</td>
+      <td>13.1 ± 1.0</td>
+      <td>15.1 ± 1.2</td>
+      <td>16.3 ± 1.3</td>
+      <td>13.7 ± 1.1</td>
+    </tr>
+    <tr>
+      <td>BugJudge</td>
+      <td>14.8 ± 1.2</td>
+      <td>15.4 ± 1.2</td>
+      <td>16.2 ± 1.3</td>
+      <td>18.1 ± 1.4</td>
+      <td>19.0 ± 1.5</td>
+      <td>16.7 ± 1.3</td>
+    </tr>
+    <tr>
+      <td>ArenaCmp</td>
+      <td>9.7 ± 0.8</td>
+      <td>10.4 ± 0.9</td>
+      <td>11.2 ± 0.9</td>
+      <td>12.6 ± 1.0</td>
+      <td>13.5 ± 1.1</td>
+      <td>11.5 ± 0.9</td>
+    </tr>
+    <tr>
+      <td><u>FusionSQL-TL</u></td>
+      <td><u>3.4 ± 1.2</u></td>
+      <td><u>4.0 ± 1.2</u></td>
+      <td><u>4.6 ± 1.3</u></td>
+      <td><u>5.2 ± 1.4</u></td>
+      <td><u>5.6 ± 1.4</u></td>
+      <td><u>4.6 ± 1.3</u></td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL (Ours)</strong></td>
+      <td><strong>3.1 ± 0.5</strong></td>
+      <td><strong>3.7 ± 0.5</strong></td>
+      <td><strong>4.2 ± 0.6</strong></td>
+      <td><strong>4.8 ± 0.7</strong></td>
+      <td><strong>5.1 ± 0.7</strong></td>
+      <td><strong>4.2 ± 0.6</strong></td>
+    </tr>
+    <tr>
+      <td rowspan="9">WikiSQL → Spider</td>
+      <td>ATC-MC</td>
+      <td>12.2 ± 1.0</td>
+      <td>13.1 ± 1.1</td>
+      <td>13.8 ± 1.2</td>
+      <td>15.2 ± 1.3</td>
+      <td>16.1 ± 1.4</td>
+      <td>14.1 ± 1.2</td>
+    </tr>
+    <tr>
+      <td>ATC-NE</td>
+      <td>13.4 ± 1.1</td>
+      <td>14.0 ± 1.2</td>
+      <td>15.1 ± 1.3</td>
+      <td>16.3 ± 1.4</td>
+      <td>17.5 ± 1.5</td>
+      <td>15.3 ± 1.3</td>
+    </tr>
+    <tr>
+      <td>DoC (τ=0.8)</td>
+      <td>14.6 ± 1.2</td>
+      <td>15.3 ± 1.3</td>
+      <td>16.5 ± 1.4</td>
+      <td>17.8 ± 1.5</td>
+      <td>19.0 ± 1.6</td>
+      <td>16.6 ± 1.4</td>
+    </tr>
+    <tr>
+      <td>DoC (τ=0.9)</td>
+      <td>15.8 ± 1.3</td>
+      <td>16.4 ± 1.3</td>
+      <td>17.7 ± 1.4</td>
+      <td>19.1 ± 1.6</td>
+      <td>20.3 ± 1.6</td>
+      <td>17.9 ± 1.4</td>
+    </tr>
+    <tr>
+      <td>PseAutoEval</td>
+      <td>11.1 ± 0.9</td>
+      <td>11.8 ± 1.0</td>
+      <td>12.6 ± 1.0</td>
+      <td>13.7 ± 1.1</td>
+      <td>14.9 ± 1.2</td>
+      <td>12.8 ± 1.0</td>
+    </tr>
+    <tr>
+      <td>BugJudge</td>
+      <td>13.6 ± 1.1</td>
+      <td>14.2 ± 1.1</td>
+      <td>15.1 ± 1.2</td>
+      <td>16.5 ± 1.3</td>
+      <td>17.6 ± 1.4</td>
+      <td>15.4 ± 1.2</td>
+    </tr>
+    <tr>
+      <td>ArenaCmp</td>
+      <td>9.2 ± 0.8</td>
+      <td>9.9 ± 0.8</td>
+      <td>10.7 ± 0.9</td>
+      <td>12.0 ± 1.0</td>
+      <td>12.8 ± 1.0</td>
+      <td>10.9 ± 0.9</td>
+    </tr>
+    <tr>
+      <td><u>FusionSQL-TL</u></td>
+      <td><u>3.6 ± 1.2</u></td>
+      <td><u>4.1 ± 1.2</u></td>
+      <td><u>4.7 ± 1.3</u></td>
+      <td><u>5.1 ± 1.3</u></td>
+      <td><u>5.6 ± 1.4</u></td>
+      <td><u>4.6 ± 1.3</u></td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL (Ours)</strong></td>
+      <td><strong>3.2 ± 0.5</strong></td>
+      <td><strong>3.8 ± 0.5</strong></td>
+      <td><strong>4.3 ± 0.6</strong></td>
+      <td><strong>4.7 ± 0.7</strong></td>
+      <td><strong>5.2 ± 0.6</strong></td>
+      <td><strong>4.2 ± 0.6</strong></td>
+    </tr>
+    <tr>
+      <td rowspan="9">SParC → CoSQL (in-domain)</td>
+      <td>ATC-MC</td>
+      <td>6.5 ± 0.6</td>
+      <td>7.2 ± 0.7</td>
+      <td>7.8 ± 0.8</td>
+      <td>8.3 ± 0.8</td>
+      <td>9.0 ± 0.9</td>
+      <td>7.8 ± 0.8</td>
+    </tr>
+    <tr>
+      <td>ATC-NE</td>
+      <td>7.1 ± 0.6</td>
+      <td>7.8 ± 0.7</td>
+      <td>8.4 ± 0.7</td>
+      <td>9.0 ± 0.8</td>
+      <td>9.6 ± 0.9</td>
+      <td>8.4 ± 0.7</td>
+    </tr>
+    <tr>
+      <td>DoC (τ=0.8)</td>
+      <td>7.7 ± 0.6</td>
+      <td>8.3 ± 0.7</td>
+      <td>8.8 ± 0.7</td>
+      <td>9.3 ± 0.8</td>
+      <td>9.9 ± 0.8</td>
+      <td>8.8 ± 0.7</td>
+    </tr>
+    <tr>
+      <td>DoC (τ=0.9)</td>
+      <td>8.8 ± 0.7</td>
+      <td>9.3 ± 0.7</td>
+      <td>9.8 ± 0.8</td>
+      <td>10.4 ± 0.9</td>
+      <td>10.9 ± 0.9</td>
+      <td>9.8 ± 0.8</td>
+    </tr>
+    <tr>
+      <td>PseAutoEval</td>
+      <td>5.5 ± 0.5</td>
+      <td>6.1 ± 0.5</td>
+      <td>6.7 ± 0.6</td>
+      <td>7.2 ± 0.6</td>
+      <td>7.8 ± 0.7</td>
+      <td>6.7 ± 0.6</td>
+    </tr>
+    <tr>
+      <td>BugJudge</td>
+      <td>6.1 ± 0.6</td>
+      <td>6.7 ± 0.6</td>
+      <td>7.3 ± 0.7</td>
+      <td>7.9 ± 0.7</td>
+      <td>8.4 ± 0.8</td>
+      <td>7.3 ± 0.7</td>
+    </tr>
+    <tr>
+      <td>ArenaCmp</td>
+      <td>3.9 ± 0.4</td>
+      <td>4.4 ± 0.4</td>
+      <td>4.9 ± 0.5</td>
+      <td>5.4 ± 0.5</td>
+      <td>5.9 ± 0.5</td>
+      <td>4.9 ± 0.5</td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL-TL</strong></td>
+      <td><strong>1.5 ± 1.2</strong></td>
+      <td><strong>1.7 ± 1.2</strong></td>
+      <td><strong>2.0 ± 1.3</strong></td>
+      <td><strong>2.2 ± 1.3</strong></td>
+      <td><strong>2.4 ± 1.3</strong></td>
+      <td><strong>2.0 ± 1.3</strong></td>
+    </tr>
+    <tr>
+      <td><u>FusionSQL (Ours)</u></td>
+      <td><u>1.6 ± 0.3</u></td>
+      <td><u>1.8 ± 0.3</u></td>
+      <td><u>2.1 ± 0.3</u></td>
+      <td><u>2.3 ± 0.4</u></td>
+      <td><u>2.5 ± 0.4</u></td>
+      <td><u>2.1 ± 0.3</u></td>
+    </tr>
+    <tr>
+      <td rowspan="9">Spider → SynSQL-2.5M</td>
+      <td>ATC-MC</td>
+      <td>10.9 ± 0.9</td>
+      <td>11.7 ± 1.0</td>
+      <td>12.3 ± 1.0</td>
+      <td>13.8 ± 1.1</td>
+      <td>14.7 ± 1.2</td>
+      <td>12.7 ± 1.0</td>
+    </tr>
+    <tr>
+      <td>ATC-NE</td>
+      <td>12.1 ± 1.0</td>
+      <td>12.9 ± 1.1</td>
+      <td>13.5 ± 1.1</td>
+      <td>14.9 ± 1.2</td>
+      <td>15.8 ± 1.3</td>
+      <td>13.8 ± 1.1</td>
+    </tr>
+    <tr>
+      <td>DoC (τ=0.8)</td>
+      <td>12.9 ± 1.0</td>
+      <td>13.6 ± 1.1</td>
+      <td>14.7 ± 1.2</td>
+      <td>16.0 ± 1.3</td>
+      <td>17.2 ± 1.4</td>
+      <td>14.9 ± 1.2</td>
+    </tr>
+    <tr>
+      <td>DoC (τ=0.9)</td>
+      <td>14.1 ± 1.1</td>
+      <td>14.8 ± 1.2</td>
+      <td>15.9 ± 1.3</td>
+      <td>17.2 ± 1.4</td>
+      <td>18.4 ± 1.5</td>
+      <td>16.1 ± 1.3</td>
+    </tr>
+    <tr>
+      <td>PseAutoEval</td>
+      <td>9.5 ± 0.8</td>
+      <td>10.1 ± 0.9</td>
+      <td>10.8 ± 0.9</td>
+      <td>12.0 ± 1.0</td>
+      <td>13.1 ± 1.1</td>
+      <td>11.1 ± 0.9</td>
+    </tr>
+    <tr>
+      <td>BugJudge</td>
+      <td>12.4 ± 1.0</td>
+      <td>13.2 ± 1.1</td>
+      <td>14.0 ± 1.1</td>
+      <td>15.5 ± 1.2</td>
+      <td>16.6 ± 1.3</td>
+      <td>14.3 ± 1.1</td>
+    </tr>
+    <tr>
+      <td>ArenaCmp</td>
+      <td>8.4 ± 0.7</td>
+      <td>9.1 ± 0.8</td>
+      <td>9.8 ± 0.8</td>
+      <td>11.1 ± 0.9</td>
+      <td>11.9 ± 1.0</td>
+      <td>10.1 ± 0.8</td>
+    </tr>
+    <tr>
+      <td><u>FusionSQL-TL</u></td>
+      <td><u>3.1 ± 1.2</u></td>
+      <td><u>3.5 ± 1.2</u></td>
+      <td><u>4.0 ± 1.3</u></td>
+      <td><u>4.4 ± 1.3</u></td>
+      <td><u>4.9 ± 1.4</u></td>
+      <td><u>4.0 ± 1.3</u></td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL (Ours)</strong></td>
+      <td><strong>2.8 ± 0.4</strong></td>
+      <td><strong>3.2 ± 0.5</strong></td>
+      <td><strong>3.7 ± 0.5</strong></td>
+      <td><strong>4.1 ± 0.6</strong></td>
+      <td><strong>4.5 ± 0.6</strong></td>
+      <td><strong>3.7 ± 0.5</strong></td>
+    </tr>
+    <tr>
+      <td rowspan="9">WikiSQL → Spider 2.0</td>
+      <td>ATC-MC</td>
+      <td>18.0 ± 1.5</td>
+      <td>18.7 ± 1.5</td>
+      <td>19.6 ± 1.6</td>
+      <td>21.0 ± 1.7</td>
+      <td>22.2 ± 1.8</td>
+      <td>19.9 ± 1.6</td>
+    </tr>
+    <tr>
+      <td>ATC-NE</td>
+      <td>19.4 ± 1.6</td>
+      <td>20.1 ± 1.7</td>
+      <td>21.3 ± 1.8</td>
+      <td>22.6 ± 1.9</td>
+      <td>23.9 ± 2.0</td>
+      <td>21.5 ± 1.8</td>
+    </tr>
+    <tr>
+      <td>DoC (τ=0.8)</td>
+      <td>20.5 ± 1.7</td>
+      <td>21.3 ± 1.8</td>
+      <td>22.7 ± 1.9</td>
+      <td>24.0 ± 2.0</td>
+      <td>25.4 ± 2.1</td>
+      <td>22.8 ± 1.9</td>
+    </tr>
+    <tr>
+      <td>DoC (τ=0.9)</td>
+      <td>21.7 ± 1.8</td>
+      <td>22.5 ± 1.9</td>
+      <td>23.9 ± 2.0</td>
+      <td>25.2 ± 2.1</td>
+      <td>26.6 ± 2.2</td>
+      <td>23.9 ± 2.0</td>
+    </tr>
+    <tr>
+      <td>PseAutoEval</td>
+      <td>16.3 ± 1.3</td>
+      <td>17.0 ± 1.4</td>
+      <td>17.7 ± 1.4</td>
+      <td>18.8 ± 1.5</td>
+      <td>20.1 ± 1.6</td>
+      <td>18.0 ± 1.4</td>
+    </tr>
+    <tr>
+      <td>BugJudge</td>
+      <td>17.3 ± 1.4</td>
+      <td>18.1 ± 1.5</td>
+      <td>19.3 ± 1.6</td>
+      <td>20.7 ± 1.7</td>
+      <td>22.0 ± 1.8</td>
+      <td>19.5 ± 1.6</td>
+    </tr>
+    <tr>
+      <td>ArenaCmp</td>
+      <td>12.6 ± 1.0</td>
+      <td>13.4 ± 1.1</td>
+      <td>14.5 ± 1.2</td>
+      <td>15.8 ± 1.3</td>
+      <td>16.9 ± 1.4</td>
+      <td>14.6 ± 1.2</td>
+    </tr>
+    <tr>
+      <td><u>FusionSQL-TL</u></td>
+      <td><u>4.5 ± 1.3</u></td>
+      <td><u>5.1 ± 1.4</u></td>
+      <td><u>5.6 ± 1.4</u></td>
+      <td><u>6.1 ± 1.5</u></td>
+      <td><u>6.6 ± 1.5</u></td>
+      <td><u>5.6 ± 1.4</u></td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL (Ours)</strong></td>
+      <td><strong>4.2 ± 0.6</strong></td>
+      <td><strong>4.8 ± 0.7</strong></td>
+      <td><strong>5.3 ± 0.7</strong></td>
+      <td><strong>5.8 ± 0.8</strong></td>
+      <td><strong>6.3 ± 0.8</strong></td>
+      <td><strong>5.3 ± 0.7</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<summary><b>Table IV. MAE (↓) for generalizing FusionSQL to unseen Text2SQL models</b></summary>
+
+Columns are the unseen model pool. Each cell reports mean ± 95% CI in percentage points. Best is in bold.
+
+<table>
+  <thead>
+    <tr>
+      <th>Transfer</th>
+      <th>Method</th>
+      <th>CodeLlama-34B</th>
+      <th>StarCoder2-15B</th>
+      <th>Mistral-7B</th>
+      <th>DeepSeek-Coder-6.7B</th>
+      <th>Phi-3-mini</th>
+      <th>Avg.</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="3">Spider → BIRD</td>
+      <td>BugJudge</td>
+      <td>13.8 ± 1.0</td>
+      <td>13.5 ± 1.1</td>
+      <td>14.0 ± 1.0</td>
+      <td>13.9 ± 0.9</td>
+      <td>13.6 ± 1.0</td>
+      <td>13.8 ± 1.0</td>
+    </tr>
+    <tr>
+      <td>ArenaCmp</td>
+      <td>11.1 ± 0.8</td>
+      <td>10.8 ± 0.9</td>
+      <td>11.4 ± 0.9</td>
+      <td>11.2 ± 0.9</td>
+      <td>10.9 ± 0.8</td>
+      <td>11.1 ± 0.9</td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL-ML (Ours)</strong></td>
+      <td><strong>6.7 ± 0.5</strong></td>
+      <td><strong>6.5 ± 0.6</strong></td>
+      <td><strong>6.8 ± 0.7</strong></td>
+      <td><strong>6.7 ± 0.6</strong></td>
+      <td><strong>6.6 ± 0.5</strong></td>
+      <td><strong>6.7 ± 0.6</strong></td>
+    </tr>
+    <tr>
+      <td rowspan="3">WikiSQL → Spider</td>
+      <td>BugJudge</td>
+      <td>12.7 ± 1.0</td>
+      <td>12.4 ± 1.1</td>
+      <td>12.9 ± 1.0</td>
+      <td>12.8 ± 0.9</td>
+      <td>12.5 ± 1.0</td>
+      <td>12.7 ± 1.0</td>
+    </tr>
+    <tr>
+      <td>ArenaCmp</td>
+      <td>10.4 ± 0.8</td>
+      <td>10.1 ± 0.9</td>
+      <td>10.6 ± 1.0</td>
+      <td>10.4 ± 0.9</td>
+      <td>10.2 ± 0.8</td>
+      <td>10.3 ± 0.9</td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL-ML (Ours)</strong></td>
+      <td><strong>6.0 ± 0.4</strong></td>
+      <td><strong>5.8 ± 0.5</strong></td>
+      <td><strong>6.1 ± 0.6</strong></td>
+      <td><strong>6.0 ± 0.5</strong></td>
+      <td><strong>5.9 ± 0.4</strong></td>
+      <td><strong>6.0 ± 0.5</strong></td>
+    </tr>
+    <tr>
+      <td rowspan="3">SParC → CoSQL</td>
+      <td>BugJudge</td>
+      <td>11.5 ± 0.8</td>
+      <td>11.3 ± 0.9</td>
+      <td>11.6 ± 1.0</td>
+      <td>11.5 ± 0.9</td>
+      <td>11.2 ± 0.8</td>
+      <td>11.4 ± 0.9</td>
+    </tr>
+    <tr>
+      <td>ArenaCmp</td>
+      <td>9.6 ± 0.7</td>
+      <td>9.4 ± 0.8</td>
+      <td>9.7 ± 0.9</td>
+      <td>9.6 ± 0.8</td>
+      <td>9.3 ± 0.7</td>
+      <td>9.5 ± 0.8</td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL-ML (Ours)</strong></td>
+      <td><strong>5.1 ± 0.4</strong></td>
+      <td><strong>4.9 ± 0.5</strong></td>
+      <td><strong>5.1 ± 0.6</strong></td>
+      <td><strong>5.0 ± 0.5</strong></td>
+      <td><strong>4.9 ± 0.4</strong></td>
+      <td><strong>5.0 ± 0.5</strong></td>
+    </tr>
+    <tr>
+      <td rowspan="3">Spider → SynSQL-2.5M</td>
+      <td>BugJudge</td>
+      <td>13.3 ± 1.0</td>
+      <td>13.0 ± 1.1</td>
+      <td>13.4 ± 1.0</td>
+      <td>13.2 ± 0.9</td>
+      <td>13.1 ± 1.0</td>
+      <td>13.2 ± 1.0</td>
+    </tr>
+    <tr>
+      <td>ArenaCmp</td>
+      <td>10.9 ± 0.8</td>
+      <td>10.6 ± 0.9</td>
+      <td>11.0 ± 1.0</td>
+      <td>10.9 ± 0.9</td>
+      <td>10.7 ± 0.8</td>
+      <td>10.8 ± 0.9</td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL-ML (Ours)</strong></td>
+      <td><strong>6.5 ± 0.5</strong></td>
+      <td><strong>6.3 ± 0.6</strong></td>
+      <td><strong>6.6 ± 0.7</strong></td>
+      <td><strong>6.5 ± 0.6</strong></td>
+      <td><strong>6.4 ± 0.5</strong></td>
+      <td><strong>6.5 ± 0.6</strong></td>
+    </tr>
+    <tr>
+      <td rowspan="3">WikiSQL → Spider 2.0</td>
+      <td>BugJudge</td>
+      <td>14.6 ± 1.0</td>
+      <td>14.2 ± 1.1</td>
+      <td>14.7 ± 1.2</td>
+      <td>14.5 ± 1.1</td>
+      <td>14.3 ± 1.0</td>
+      <td>14.5 ± 1.1</td>
+    </tr>
+    <tr>
+      <td>ArenaCmp</td>
+      <td>12.0 ± 0.9</td>
+      <td>11.7 ± 1.0</td>
+      <td>12.1 ± 1.1</td>
+      <td>12.0 ± 1.0</td>
+      <td>11.8 ± 0.9</td>
+      <td>11.9 ± 1.0</td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL-ML (Ours)</strong></td>
+      <td><strong>7.0 ± 0.5</strong></td>
+      <td><strong>6.8 ± 0.6</strong></td>
+      <td><strong>7.1 ± 0.7</strong></td>
+      <td><strong>7.0 ± 0.6</strong></td>
+      <td><strong>6.9 ± 0.5</strong></td>
+      <td><strong>7.0 ± 0.6</strong></td>
+    </tr>
+  </tbody>
+</table>
+
+<summary><b>Table VI. MAE (↓) on classic Text2SQL models such as ATHENA++</b></summary>
+
+Each cell reports mean ± 95% CI in percentage points. Best is in bold, second-best is underlined.
+
+<table>
+  <thead>
+    <tr>
+      <th>Dataset</th>
+      <th>Method</th>
+      <th>ATHENA</th>
+      <th>ATHENA++</th>
+      <th>SQLizer</th>
+      <th>Avg.</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td rowspan="5">Spider</td>
+      <td>BugJudge</td>
+      <td>12.0 ± 1.0</td>
+      <td>11.8 ± 0.9</td>
+      <td>12.1 ± 1.0</td>
+      <td>12.0 ± 1.0</td>
+    </tr>
+    <tr>
+      <td><u>ArenaCmp</u></td>
+      <td><u>10.8 ± 0.9</u></td>
+      <td><u>10.6 ± 0.8</u></td>
+      <td><u>10.9 ± 0.9</u></td>
+      <td><u>10.8 ± 0.9</u></td>
+    </tr>
+    <tr>
+      <td>FusionSQL-TL</td>
+      <td>14.3 ± 1.1</td>
+      <td>14.1 ± 1.1</td>
+      <td>14.4 ± 1.2</td>
+      <td>14.3 ± 1.2</td>
+    </tr>
+    <tr>
+      <td>FusionSQL-LLM</td>
+      <td>12.8 ± 1.1</td>
+      <td>12.6 ± 1.0</td>
+      <td>12.9 ± 1.1</td>
+      <td>12.8 ± 1.1</td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL</strong></td>
+      <td><strong>8.3 ± 0.6</strong></td>
+      <td><strong>8.2 ± 0.7</strong></td>
+      <td><strong>8.4 ± 0.8</strong></td>
+      <td><strong>8.3 ± 0.7</strong></td>
+    </tr>
+    <tr>
+      <td rowspan="5">Spider 2.0</td>
+      <td>BugJudge</td>
+      <td>12.8 ± 1.1</td>
+      <td>12.6 ± 1.0</td>
+      <td>12.9 ± 1.1</td>
+      <td>12.8 ± 1.1</td>
+    </tr>
+    <tr>
+      <td><u>ArenaCmp</u></td>
+      <td><u>11.6 ± 0.8</u></td>
+      <td><u>11.4 ± 0.9</u></td>
+      <td><u>11.7 ± 1.0</u></td>
+      <td><u>11.6 ± 0.9</u></td>
+    </tr>
+    <tr>
+      <td>FusionSQL-TL</td>
+      <td>15.1 ± 1.1</td>
+      <td>14.9 ± 1.2</td>
+      <td>15.2 ± 1.3</td>
+      <td>15.1 ± 1.2</td>
+    </tr>
+    <tr>
+      <td>FusionSQL-LLM</td>
+      <td>13.6 ± 1.0</td>
+      <td>13.4 ± 1.0</td>
+      <td>13.7 ± 1.2</td>
+      <td>13.6 ± 1.1</td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL</strong></td>
+      <td><strong>9.0 ± 0.6</strong></td>
+      <td><strong>8.9 ± 0.7</strong></td>
+      <td><strong>9.1 ± 0.8</strong></td>
+      <td><strong>9.0 ± 0.7</strong></td>
+    </tr>
+    <tr>
+      <td rowspan="5">SynSQL-2.5M</td>
+      <td>BugJudge</td>
+      <td>13.0 ± 1.1</td>
+      <td>12.8 ± 1.1</td>
+      <td>13.1 ± 1.1</td>
+      <td>13.0 ± 1.1</td>
+    </tr>
+    <tr>
+      <td><u>ArenaCmp</u></td>
+      <td><u>11.8 ± 0.8</u></td>
+      <td><u>11.6 ± 0.9</u></td>
+      <td><u>11.9 ± 1.0</u></td>
+      <td><u>11.8 ± 0.9</u></td>
+    </tr>
+    <tr>
+      <td>FusionSQL-TL</td>
+      <td>15.3 ± 1.2</td>
+      <td>15.1 ± 1.2</td>
+      <td>15.4 ± 1.3</td>
+      <td>15.3 ± 1.3</td>
+    </tr>
+    <tr>
+      <td>FusionSQL-LLM</td>
+      <td>13.7 ± 1.1</td>
+      <td>13.5 ± 1.1</td>
+      <td>13.8 ± 1.2</td>
+      <td>13.7 ± 1.1</td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL</strong></td>
+      <td><strong>9.1 ± 0.6</strong></td>
+      <td><strong>9.0 ± 0.7</strong></td>
+      <td><strong>9.2 ± 0.8</strong></td>
+      <td><strong>9.1 ± 0.7</strong></td>
+    </tr>
+    <tr>
+      <td rowspan="5">CoSQL</td>
+      <td>BugJudge</td>
+      <td>11.5 ± 0.8</td>
+      <td>11.3 ± 0.9</td>
+      <td>11.6 ± 1.0</td>
+      <td>11.5 ± 0.9</td>
+    </tr>
+    <tr>
+      <td><u>ArenaCmp</u></td>
+      <td><u>10.2 ± 0.8</u></td>
+      <td><u>10.0 ± 0.7</u></td>
+      <td><u>10.3 ± 0.8</u></td>
+      <td><u>10.2 ± 0.8</u></td>
+    </tr>
+    <tr>
+      <td>FusionSQL-TL</td>
+      <td>13.8 ± 1.1</td>
+      <td>13.6 ± 1.1</td>
+      <td>13.9 ± 1.2</td>
+      <td>13.8 ± 1.2</td>
+    </tr>
+    <tr>
+      <td>FusionSQL-LLM</td>
+      <td>12.3 ± 1.1</td>
+      <td>12.1 ± 1.0</td>
+      <td>12.4 ± 1.1</td>
+      <td>12.3 ± 1.1</td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL</strong></td>
+      <td><strong>7.9 ± 0.5</strong></td>
+      <td><strong>7.8 ± 0.6</strong></td>
+      <td><strong>8.0 ± 0.7</strong></td>
+      <td><strong>7.9 ± 0.6</strong></td>
+    </tr>
+    <tr>
+      <td rowspan="5">BIRD</td>
+      <td>BugJudge</td>
+      <td>13.2 ± 1.1</td>
+      <td>13.0 ± 1.0</td>
+      <td>13.3 ± 1.1</td>
+      <td>13.2 ± 1.1</td>
+    </tr>
+    <tr>
+      <td><u>ArenaCmp</u></td>
+      <td><u>12.0 ± 0.9</u></td>
+      <td><u>11.8 ± 0.8</u></td>
+      <td><u>12.1 ± 0.9</u></td>
+      <td><u>12.0 ± 0.9</u></td>
+    </tr>
+    <tr>
+      <td>FusionSQL-TL</td>
+      <td>15.5 ± 1.3</td>
+      <td>15.3 ± 1.2</td>
+      <td>15.6 ± 1.3</td>
+      <td>15.5 ± 1.3</td>
+    </tr>
+    <tr>
+      <td>FusionSQL-LLM</td>
+      <td>13.9 ± 1.2</td>
+      <td>13.7 ± 1.1</td>
+      <td>14.0 ± 1.2</td>
+      <td>13.9 ± 1.2</td>
+    </tr>
+    <tr>
+      <td><strong>FusionSQL</strong></td>
+      <td><strong>9.2 ± 0.6</strong></td>
+      <td><strong>9.1 ± 0.7</strong></td>
+      <td><strong>9.3 ± 0.8</strong></td>
+      <td><strong>9.2 ± 0.7</strong></td>
+    </tr>
+  </tbody>
+</table>
+
 ---
 
 If you run into issues or need helper scripts for dataset downloads/materialization, open an issue or reach out.
